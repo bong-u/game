@@ -5,59 +5,54 @@
         <meta charset = 'utf-8'>
 
         <style>
+			@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;800&display=swap');
             body {
                 position : relative;
-                background-color : black;
-                color : white;
-                font-family : fantasy, monospace;
-                font-size : 20px;
+                font-family: 'Nanum Gothic', sans-serif;
+				font-weight : bold;
+                font-size : 15px;
+				text-align : center;
             }
 
             #container {
-                display : grid; 
-                justify-content: center;
-                
-                grid-template-columns : 200px auto 200px;
-                row-gap : 30px;
-                grid-template-areas:
-                    "    .      logo    version    "
-                    "  score   canvas   nextBlock  "
-                    "    .     canvas   developer  ";
             }
             #intro {
                 position: absolute;
                 top: 40%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                font-size : 30px;
+				z-index : 1;
             }
             #logo {
-                grid-area : logo;
-                font-size : 50px;
-                text-align : center;
-                font-weight : 1000;
-            }
+				font-size : 40px;
+				margin : 10px;
+			}
+			#logo > span { margin : 4px;}
+			#frame {
+        		position: relative;
+				width : 660px;
+				margin : 0 auto;
+			}
             #canvas {
-                grid-area : canvas;
+				position : absolute;
+				left : 180px;
+				top : 30px;
                 margin : 0 auto;
             }
             #next_block {
-                grid-area : nextBlock;
-                font-size : 30px;
+				position : absolute;
+				left : 510px;
+				top : 30px;
             }
-            #score {
-                grid-area : score;
-                font-size : 30px;
+			#score {
+				position : absolute;
+				left : 60px;
+				top : 30px;
             }
-            #version { grid-area : version; }
-            #developer {
-                grid-area : developer;
-                font-size : 15px;
-                text-align : center;
-                align-self: end;
+			#developer {
+				font-size: 12px;
+				margin : 10px;
             }
-
-            #score, #version, #next_block { text-align : center; }
         </style>
     </head>
 
@@ -72,21 +67,19 @@
                     <span style='color: yellow'>I</span>
                     <span style='color: orange'>S</span>
                 </div>
-        
-                <canvas id="canvas" width ="300" height="600"></canvas>
-
-                <div id='next_block'>
-                    NEXT
-                    <canvas id='next' width="160" height="160"></canvas>
-                </div>
-        
-                <div id='score'>
-                    score<br><span id="score_value">00000</span>
-                </div>
-
-                <div id='version'>ver 1.2</div>
-
-                <div id='developer'>made by<Br>3포대 상병<text style="color:red">(진)</text> 손봉우</div>
+        		
+				<div id='frame'>
+					<img src='res/tetris_bg.png'>	
+						<div id='score'>
+							score<br><span id="score_value">00000</span>
+						</div>
+						<canvas id="canvas" width ="300" height="600"></canvas>
+						
+                  		<canvas id='next_block' width="120" height="120"></canvas>
+					</img>
+				</div>
+				
+				<div id='developer'>3포대 상병 손봉우</div>
             </div>
     </body>
 </html>
@@ -95,7 +88,7 @@
     "use strict";
 
     function NextblockCtx() {
-        const canvas = document.getElementById ('next');
+        const canvas = document.getElementById ('next_block');
         return canvas.getContext ('2d');
     }
 
@@ -109,9 +102,6 @@
         constructor () {
             this.#canvas = document.getElementById ('canvas');
             this.#ctx = this.#canvas.getContext ('2d');
-
-            this.#bg = new Image();
-            this.#bg.src = 'res/tiger.png';
 
             this.#current = new Shape(true);
             this.#next = new Shape(false);
@@ -199,10 +189,6 @@
         updateScreen() {
             this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
 
-            this.#ctx.globalAlpha = 0.3;
-            this.#ctx.drawImage(this.#bg, 25, 179, 250, 250);
-            this.#ctx.globalAlpha = 1.0;
-
             this.#current.draw(this.#ctx);
 
             this.drawBlocks(this.#ctx);
@@ -288,7 +274,7 @@
 
             if (eraseLine.length != 0) {
                 clearInterval(this.interval);
-                this.interval = setInterval (this.update(), this.#t);
+                this.interval = setInterval (this.update.bind(this), this.#t);
             }
         }
 
@@ -463,8 +449,8 @@
             ctx.fill();
             ctx.closePath();
 
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 5;
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
             ctx.strokeRect(this.#x, this.#y, 30, 30);
         }
     }
