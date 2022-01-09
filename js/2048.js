@@ -1,8 +1,8 @@
 'use strict';
 
 window.onload = function() {
-	new Block(0, 0);		//to call constructor ( load images )
-	setTimeout(function() { new Game(); }, 10);
+	new Block(0, 0);		//to call constructor ( load images )=
+	setTimeout(function() { new Game(); }, 100);
 }
 
 class Game {
@@ -23,6 +23,8 @@ class Game {
         this.#board[0][0].draw(this.#ctx);
 
         document.addEventListener('keydown', this.keydown.bind(this));
+		
+		this.update();
     }
 
     keydown (e) {
